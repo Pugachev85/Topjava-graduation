@@ -1,5 +1,6 @@
 package ru.topjava.graduation.web.restaurant;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,9 @@ import java.util.List;
 
 import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
 
+@Tag(
+        name = "Admin Restaurant Controller",
+        description = "allows administrator to manage restaurants")
 @RestController
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -29,8 +33,6 @@ public class RestaurantController {
     static final String REST_URL = "/api/admin/restaurant";
 
     private final RestaurantRepository restaurantRepository;
-    private final DishRepository dishRepository;
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> getWithDishes(@PathVariable int id) {
@@ -67,45 +69,6 @@ public class RestaurantController {
         Restaurant created = restaurantRepository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);
-    }
-
-    @GetMapping("/{rId}/{id}")
-    public ResponseEntity<Dish> get(@PathVariable int rId, @PathVariable int id) {
-        log.info("get Dish {}", id);
-        return ResponseEntity.of(dishRepository.get(id));
-    }
-
-    @DeleteMapping("/{rId}/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int rId, @PathVariable int id) {
-        log.info("delete {}", id);
-        dishRepository.delete(id);
-    }
-
-//    @GetMapping
-//    public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
-//        log.info("getAll");
-//        return restaurantRepository.getAll();
-//    }
-
-    @PutMapping(value = "/{rId}/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Dish dish, @PathVariable int rId, @PathVariable int id) {
-        log.info("update dish {}", dish);
-        dish.setId(id);
-        dishRepository.save(dish);
-    }
-
-    @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, @PathVariable int id) {
-        log.info("create dish {}", dish);
-        checkNew(dish);
-        dish.setRestaurant(restaurantRepository.getExisted(id));
-        Dish created = dishRepository.save(dish);
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/" + id + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

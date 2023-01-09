@@ -28,6 +28,6 @@ public class Restaurant extends NamedEntity {
     private List<User> voters;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    @Schema(hidden = true)
+    @Schema(hidden = true)
     private List<Dish> dishes;
 }
