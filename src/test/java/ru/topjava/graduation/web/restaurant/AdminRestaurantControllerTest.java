@@ -27,9 +27,9 @@ import static ru.topjava.graduation.web.restaurant.MealTestData.*;
 import static ru.topjava.graduation.web.user.UserTestData.ADMIN_MAIL;
 import static ru.topjava.graduation.web.user.UserTestData.USER_MAIL;
 
-class RestaurantControllerTest extends AbstractControllerTest {
+class AdminRestaurantControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL_SLASH = RestaurantController.REST_URL + '/';
+    private static final String REST_URL_SLASH = AdminRestaurantController.REST_URL + '/';
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -89,7 +89,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void createWithLocation() throws Exception {
         Restaurant newRestaurant = getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(RestaurantController.REST_URL)
+        ResultActions action = perform(MockMvcRequestBuilders.post(AdminRestaurantController.REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)));
 
@@ -103,7 +103,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(RestaurantController.REST_URL))
+        perform(MockMvcRequestBuilders.get(AdminRestaurantController.REST_URL))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -133,7 +133,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
         Restaurant invalid = new Restaurant(null, null, "Dummy", 200);
-        perform(MockMvcRequestBuilders.post(RestaurantController.REST_URL)
+        perform(MockMvcRequestBuilders.post(AdminRestaurantController.REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -181,7 +181,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     void createDuplicate() {
         Restaurant invalid = new Restaurant(null, ADMIN_RESTAURANT_1.getDateTime(), "Dummy", 200);
         assertThrows(Exception.class, () ->
-                perform(MockMvcRequestBuilders.post(RestaurantController.REST_URL)
+                perform(MockMvcRequestBuilders.post(AdminRestaurantController.REST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(invalid)))
                         .andDo(print())

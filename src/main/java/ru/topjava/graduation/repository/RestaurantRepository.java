@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.graduation.error.DataConflictException;
 import ru.topjava.graduation.model.Restaurant;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,8 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.FETCH)
     @Query("SELECT r FROM Restaurant r WHERE r.id = :id")
     Optional<Restaurant> getWithDishes (int id);
+
+    @EntityGraph(attributePaths = {"votes"}, type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT r FROM Restaurant r WHERE r.updateDate = :today")
+    List<Restaurant> getAllWithVotes(LocalDate today);
 }

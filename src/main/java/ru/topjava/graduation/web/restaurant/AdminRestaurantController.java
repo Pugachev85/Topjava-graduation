@@ -10,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.topjava.graduation.model.Dish;
 import ru.topjava.graduation.model.Restaurant;
-import ru.topjava.graduation.repository.DishRepository;
 import ru.topjava.graduation.repository.RestaurantRepository;
 import ru.topjava.graduation.web.AuthUser;
 
@@ -26,10 +24,10 @@ import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
         name = "Admin Restaurant Controller",
         description = "allows administrator to manage restaurants")
 @RestController
-@RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class RestaurantController {
+public class AdminRestaurantController {
     static final String REST_URL = "/api/admin/restaurant";
 
     private final RestaurantRepository restaurantRepository;

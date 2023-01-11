@@ -38,7 +38,7 @@ public abstract class AbstractUserController {
 
     public ResponseEntity<User> getWithMeals(int id) {
         log.info("getWithMeals {}", id);
-        return ResponseEntity.of(repository.getWithMeals(id));
+        return ResponseEntity.of(repository.getWithVotes(id));
     }
 
     protected User prepareAndSave(User user) {

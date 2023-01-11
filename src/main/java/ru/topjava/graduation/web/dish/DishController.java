@@ -78,7 +78,6 @@ public class DishController {
         log.info("create dish {}", dish);
         checkNew(dish);
         Dish created = dishService.save(dish, restaurantId);
-        System.out.println("_______________" + created.getId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{}")
                 .buildAndExpand(created.getId()).toUri();
