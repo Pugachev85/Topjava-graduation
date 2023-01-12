@@ -15,6 +15,6 @@ public interface UserRepository extends BaseRepository<User> {
 
     //    https://stackoverflow.com/a/46013654/548473
     @EntityGraph(attributePaths = {"votes"}, type = EntityGraph.EntityGraphType.FETCH)
-    @Query("SELECT u FROM User u WHERE u.id=?1")
+    @Query("SELECT u FROM User u WHERE u.id=:id")
     Optional<User> getWithVotes(int id);
 }

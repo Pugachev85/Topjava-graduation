@@ -10,14 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.topjava.graduation.error.AppException;
 import ru.topjava.graduation.error.DataConflictException;
 import ru.topjava.graduation.model.Restaurant;
 import ru.topjava.graduation.model.User;
 import ru.topjava.graduation.model.Vote;
 import ru.topjava.graduation.repository.RestaurantRepository;
 import ru.topjava.graduation.repository.VoteRepository;
-import ru.topjava.graduation.util.UsersUtil;
 import ru.topjava.graduation.web.AuthUser;
 
 import java.time.LocalDate;
@@ -54,14 +52,15 @@ public class VoteController {
     @Transactional
     public void vote(@PathVariable int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Attempt to vote by user id: {}", authUser.id());
+
         // 11:00 The time of stopping voting today
-        if(LocalTime.now().isAfter(LocalTime.of(11, 00))) {
+        if (LocalTime.now().isAfter(LocalTime.of(23, 00))) {
             throw new DataConflictException("Voting Blocked after 11:00");
         }
         User user = authUser.getUser();
         Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
         Vote vote = voteRepository.findByUserAndDate(user, LocalDate.now());
-        if (vote == null){
+        if (vote == null) {
             vote = new Vote();
             vote.setUser(user);
             vote.setDate(LocalDate.now());

@@ -1,5 +1,6 @@
 package ru.topjava.graduation.web.restaurant;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -32,25 +33,37 @@ public class AdminRestaurantController {
 
     private final RestaurantRepository restaurantRepository;
 
+    @Operation(
+            summary = "Get Restaurant by id",
+            description = "Returns Restaurant")
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> getWithDishes(@PathVariable int id) {
         log.info("get restaurant {}", id);
         return ResponseEntity.of(restaurantRepository.getWithDishes(id));
     }
 
+    @Operation(
+            summary = "Delete restaurant by id",
+            description = "Returns status 204")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete( @PathVariable int id) {
+    public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         restaurantRepository.delete(id);
     }
 
+    @Operation(
+            summary = "Get all Restaurants",
+            description = "Returns all Restaurants")
     @GetMapping
     public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("getAll");
         return restaurantRepository.getAll();
     }
 
+    @Operation(
+            summary = "Update Restaurant by id",
+            description = "Returns status 204")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
@@ -60,6 +73,9 @@ public class AdminRestaurantController {
         restaurantRepository.save(restaurant);
     }
 
+    @Operation(
+            summary = "Create Restaurant",
+            description = "Returns Restaurant with location")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create restaurant {}", restaurant);

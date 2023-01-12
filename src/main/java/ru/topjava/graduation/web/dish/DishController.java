@@ -34,8 +34,8 @@ public class DishController {
     private final DishService dishService;
 
     @Operation(
-            summary = "Get dish with Id",
-            description = "Returns status 204")
+            summary = "Get Dish with id",
+            description = "Returns Dish")
     @GetMapping("/{id}")
     public Dish get(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("get Dish {}", id);
@@ -43,7 +43,7 @@ public class DishController {
     }
 
     @Operation(
-            summary = "Delete dish with Id",
+            summary = "Delete Dish with id",
             description = "Returns status 204")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -54,16 +54,17 @@ public class DishController {
     }
 
     @Operation(
-            summary = "All dishes for restaurant",
-            description = "Returns response with dishes")
+            summary = "Get all Dishes for Restaurant",
+            description = "Returns all Dishes for Restaurant")
     @GetMapping
+    //TODO: добавить проверку id на существование
     public List<Dish> getAllByRestaurant(@PathVariable int restaurantId) {
-        log.info("get all dishes of restaurant id {}", restaurantId);
+        log.info("get all dishes by restaurant id {}", restaurantId);
         return dishRepository.getAllByRestaurant(restaurantId);
     }
 
     @Operation(
-            summary = "Update dish with Id",
+            summary = "Update Dish with id",
             description = "Returns status 204")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -73,6 +74,9 @@ public class DishController {
         dishService.save(dish, restaurantId);
     }
 
+    @Operation(
+            summary = "Create new Dish for Restaurant",
+            description = "Returns Dish with location")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restaurantId) {
         log.info("create dish {}", dish);
