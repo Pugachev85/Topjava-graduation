@@ -1,6 +1,8 @@
 package ru.topjava.graduation.web.vote;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+@Tag(
+        name = "Vote Controller",
+        description = "allows to authenticated user watch restaurants with menu and count of votes, and do vote")
 @Slf4j
 @RestController
 @RequestMapping(value = ru.topjava.graduation.web.vote.VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,20 +37,29 @@ public class VoteController {
     private final RestaurantRepository restaurantRepository;
     private final VoteRepository voteRepository;
 
+    @Operation(
+            summary = "Get restaurants with menu and count of votes",
+            description = "Returns restaurants with menu and count of votes")
     @GetMapping
-    public List<Restaurant> getAll() {
+    public List<Restaurant> getAll() { //TODO: change Restaurant to RestaurantTO (updateDate, countOfVotes, Dishes)
         log.info("getAll");
         return restaurantRepository.getAllWithVotes(LocalDate.now());
     }
 
-    @PatchMapping("/{id}")
+    @Operation(
+            summary = "Do vote for authenticated user",
+            description = "Returns status 204")
+    @PatchMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void vote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("add vote");
-        if(LocalTime.now().isAfter(LocalTime.of(00, 10))) throw new DataConflictException("Voting Blocked after 11:00");
+    public void vote(@PathVariable int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("Attempt to vote by user id: {}", authUser.id());
+        // 11:00 The time of stopping voting today
+        if(LocalTime.now().isAfter(LocalTime.of(11, 00))) {
+            throw new DataConflictException("Voting Blocked after 11:00");
+        }
         User user = authUser.getUser();
-        Restaurant restaurant = restaurantRepository.getExisted(id);
+        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
         Vote vote = voteRepository.findByUserAndDate(user, LocalDate.now());
         if (vote == null){
             vote = new Vote();
