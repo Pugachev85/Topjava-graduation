@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.graduation.model.Dish;
+import ru.topjava.graduation.model.Restaurant;
 import ru.topjava.graduation.repository.DishRepository;
+import ru.topjava.graduation.repository.RestaurantRepository;
 import ru.topjava.graduation.service.DishService;
 
 import java.net.URI;
@@ -30,6 +32,7 @@ public class DishController {
     static final String REST_URL = "/api/admin/restaurant/{restaurantId}/dishes";
 
     private final DishRepository dishRepository;
+    private final RestaurantRepository restaurantRepository;
 
     private final DishService dishService;
 
@@ -48,7 +51,7 @@ public class DishController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {
-        int checkedId = dishRepository.checkBelongAndGet(restaurantId, id).id();
+        int checkedId = dishRepository.checkBelongAndGet(getExist(restaurantId).id(), id).id();
         log.info("delete {}", checkedId);
         dishRepository.delete(checkedId);
     }
@@ -60,7 +63,7 @@ public class DishController {
     //TODO: добавить проверку id на существование
     public List<Dish> getAllByRestaurant(@PathVariable int restaurantId) {
         log.info("get all dishes by restaurant id {}", restaurantId);
-        return dishRepository.getAllByRestaurant(restaurantId);
+        return dishRepository.getAllByRestaurant(getExist(restaurantId).id());
     }
 
     @Operation(
@@ -71,7 +74,7 @@ public class DishController {
     public void update(@Valid @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int id) {
         log.info("update dish {}", dish);
         dish.setId(id);
-        dishService.save(dish, restaurantId);
+        dishService.save(dish, getExist(restaurantId).id());
     }
 
     @Operation(
@@ -81,10 +84,14 @@ public class DishController {
     public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restaurantId) {
         log.info("create dish {}", dish);
         checkNew(dish);
-        Dish created = dishService.save(dish, restaurantId);
+        Dish created = dishService.save(dish, getExist(restaurantId).id());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
+    private Restaurant getExist(int restaurantId){
+        return restaurantRepository.getExisted(restaurantId);
     }
 }

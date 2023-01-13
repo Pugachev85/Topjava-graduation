@@ -14,8 +14,8 @@ import ru.topjava.graduation.error.DataConflictException;
 import ru.topjava.graduation.model.Restaurant;
 import ru.topjava.graduation.model.User;
 import ru.topjava.graduation.model.Vote;
-import ru.topjava.graduation.repository.RestaurantRepository;
-import ru.topjava.graduation.repository.VoteRepository;
+import ru.topjava.graduation.service.VoteService;
+import ru.topjava.graduation.to.RestaurantTo;
 import ru.topjava.graduation.web.AuthUser;
 
 import java.time.LocalDate;
@@ -32,16 +32,15 @@ import java.util.List;
 public class VoteController {
     static final String REST_URL = "/api/voting";
 
-    private final RestaurantRepository restaurantRepository;
-    private final VoteRepository voteRepository;
+    private final VoteService voteService;
 
     @Operation(
             summary = "Get restaurants with menu and count of votes",
             description = "Returns restaurants with menu and count of votes")
     @GetMapping
-    public List<Restaurant> getAll() { //TODO: change Restaurant to RestaurantTO (updateDate, countOfVotes, Dishes)
+    public List<RestaurantTo> getAll() {
         log.info("getAll");
-        return restaurantRepository.getAllWithVotes(LocalDate.now());
+        return voteService.getAllWithVotesByDate(LocalDate.now());
     }
 
     @Operation(
@@ -54,18 +53,18 @@ public class VoteController {
         log.info("Attempt to vote by user id: {}", authUser.id());
 
         // 11:00 The time of stopping voting today
-        if (LocalTime.now().isAfter(LocalTime.of(23, 00))) {
+        if (LocalTime.now().isAfter(LocalTime.of(11,0))) {
             throw new DataConflictException("Voting Blocked after 11:00");
         }
         User user = authUser.getUser();
-        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
-        Vote vote = voteRepository.findByUserAndDate(user, LocalDate.now());
+        Restaurant restaurant = voteService.getExisted(restaurantId);
+        Vote vote = voteService.findByUserAndDate(user, LocalDate.now());
         if (vote == null) {
             vote = new Vote();
             vote.setUser(user);
             vote.setDate(LocalDate.now());
         }
         vote.setRestaurant(restaurant);
-        voteRepository.save(vote);
+        voteService.save(vote);
     }
 }
