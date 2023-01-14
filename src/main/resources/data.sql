@@ -15,11 +15,11 @@ VALUES ('USER', 1),
        ('USER', 5),
        ('USER', 6);
 INSERT INTO RESTAURANT (NAME, UPDATE_DATE)
-VALUES ('Astoria', '2023-01-12'),
-       ('Prival', '2023-01-12'),
-       ('Ohotnik', '2023-01-12');
+VALUES ('Astoria', now()),
+       ('Prival', now()),
+       ('Ohotnik', now());
 INSERT INTO VOTES (DATE, RESTAURANT_ID, USER_ID)
-VALUES ('2023-01-12', 1, 1);
+VALUES (now(), 1, 1);
 
 INSERT INTO DISHES (NAME, PRICE, RESTAURANT_ID)
 VALUES ('Борщ Русский', 100, 1),

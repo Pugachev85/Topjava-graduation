@@ -25,4 +25,9 @@ public class Dish extends NamedEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonIgnore
     private Restaurant restaurant;
+
+    public Dish(Integer id, String name, Double price) {
+        super(id, name);
+        this.price = price;
+    }
 }

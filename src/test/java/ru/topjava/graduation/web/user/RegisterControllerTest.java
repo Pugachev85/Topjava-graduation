@@ -22,7 +22,7 @@ class RegisterControllerTest extends AbstractControllerTest {
 
     @Test
     void register() throws Exception {
-        UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", 1500);
+        UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
         User newUser = UsersUtil.createNewFromTo(newTo);
         ResultActions action = perform(MockMvcRequestBuilders.post(RegisterController.REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -39,7 +39,7 @@ class RegisterControllerTest extends AbstractControllerTest {
 
     @Test
     void registerInvalid() throws Exception {
-        UserTo newTo = new UserTo(null, null, null, null, 1);
+        UserTo newTo = new UserTo(null, null, null, null);
         perform(MockMvcRequestBuilders.post(RegisterController.REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))

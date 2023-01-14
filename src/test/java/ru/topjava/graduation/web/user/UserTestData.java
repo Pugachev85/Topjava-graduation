@@ -4,7 +4,6 @@ import ru.topjava.graduation.model.Role;
 import ru.topjava.graduation.model.User;
 import ru.topjava.graduation.util.JsonUtil;
 import ru.topjava.graduation.web.MatcherFactory;
-import ru.topjava.graduation.web.restaurant.MealTestData;
 
 import java.util.Collections;
 import java.util.Date;
@@ -31,14 +30,14 @@ public class UserTestData {
     public static final String ADMIN_MAIL = "admin@gmail.com";
     public static final String GUEST_MAIL = "guest@gmail.com";
 
-    public static final User user = new User(USER_ID, "User", USER_MAIL, "password", 2005, Role.USER);
-    public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", 1900, Role.ADMIN, Role.USER);
-    public static final User guest = new User(GUEST_ID, "Guest", GUEST_MAIL, "guest", 2000);
+    public static final User user = new User(USER_ID, "User", USER_MAIL, "password", Role.USER);
+    public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", Role.ADMIN, Role.USER);
+    public static final User guest = new User(GUEST_ID, "Guest", GUEST_MAIL, "guest");
 
-    static {
-        user.setRestaurants(MealTestData.RESTAURANTS);
-        admin.setRestaurants(List.of(MealTestData.ADMIN_RESTAURANT_2, MealTestData.ADMIN_RESTAURANT_1));
-    }
+//    static {
+//        user.setRestaurants(MealTestData.RESTAURANTS);
+//        admin.setRestaurants(List.of(MealTestData.ADMIN_RESTAURANT_2, MealTestData.ADMIN_RESTAURANT_1));
+//    }
 
     public static User getNew() {
         return new User(null, "New", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(Role.USER));
