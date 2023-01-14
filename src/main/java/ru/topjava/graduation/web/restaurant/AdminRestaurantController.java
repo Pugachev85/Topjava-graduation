@@ -8,12 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.graduation.model.Restaurant;
 import ru.topjava.graduation.repository.RestaurantRepository;
-import ru.topjava.graduation.web.AuthUser;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -49,14 +47,15 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        restaurantRepository.delete(id);
+        Restaurant checked = restaurantRepository.getExisted(id);
+        restaurantRepository.delete(checked.id());
     }
 
     @Operation(
             summary = "Get all Restaurants",
             description = "Returns all Restaurants")
     @GetMapping
-    public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
+    public List<Restaurant> getAll() {
         log.info("getAll");
         return restaurantRepository.getAll();
     }

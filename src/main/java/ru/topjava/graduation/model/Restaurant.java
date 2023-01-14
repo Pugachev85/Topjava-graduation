@@ -1,5 +1,6 @@
 package ru.topjava.graduation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +26,25 @@ public class Restaurant extends NamedEntity {
     @NotNull
     private LocalDate updateDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @Schema(hidden = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @Schema(hidden = true)
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Vote> votes;
+
+    public Restaurant(Integer id, String name, LocalDate updateDate) {
+        super(id, name);
+        this.updateDate = updateDate;
+    }
+
+    public Restaurant(Integer id, String name, LocalDate updateDate, List<Dish> dishes) {
+        super(id, name);
+        this.updateDate = updateDate;
+        this.dishes = dishes;
+    }
 }
