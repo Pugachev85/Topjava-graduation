@@ -37,14 +37,6 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @Operation(
-            summary = "Get User by id with his Votes",
-            description = "Returns User with his Votes")
-    @GetMapping("/{id}/with-votes")
-    public ResponseEntity<User> getWithVotes(@PathVariable int id) {
-        return super.getWithVotes(id);
-    }
-
-    @Operation(
             summary = "Delete User by id",
             description = "Returns status 204")
     @Override

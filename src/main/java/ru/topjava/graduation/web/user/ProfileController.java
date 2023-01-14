@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -53,13 +52,5 @@ public class ProfileController extends AbstractUserController {
         assureIdConsistent(userTo, authUser.id());
         User user = authUser.getUser();
         prepareAndSave(UsersUtil.updateFromTo(user, userTo));
-    }
-
-    @Operation(
-            summary = "Get User profile with his Votes",
-            description = "Returns User profile with his Votes")
-    @GetMapping("/with-votes")
-    public ResponseEntity<User> getWithVotes(@AuthenticationPrincipal AuthUser authUser) {
-        return super.getWithVotes(authUser.id());
     }
 }

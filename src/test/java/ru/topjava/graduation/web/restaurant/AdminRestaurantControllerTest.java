@@ -40,7 +40,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getWithDishs() throws Exception {
+    void getWithDishes() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())

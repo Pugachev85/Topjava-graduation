@@ -19,13 +19,20 @@ public class Vote extends BaseEntity {
     @NotNull
     private LocalDate date;
 
-    @JsonBackReference
+    @JsonBackReference(value = "restaurant_votes")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @JsonBackReference
+    @JsonBackReference(value = "user_votes")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Vote(Integer id, LocalDate date, Restaurant restaurant, User user) {
+        super(id);
+        this.date = date;
+        this.restaurant = restaurant;
+        this.user = user;
+    }
 }
