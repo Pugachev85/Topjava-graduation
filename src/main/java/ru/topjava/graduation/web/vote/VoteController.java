@@ -1,6 +1,5 @@
 package ru.topjava.graduation.web.vote;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VoteController {
     static final String REST_URL = "/api/voting";
-
+    static LocalTime votingStopTime = LocalTime.of(11, 0);// 11:00 The time of stopping voting today
     private final VoteService voteService;
 
     @Operation(
@@ -39,21 +38,19 @@ public class VoteController {
             description = "Returns restaurants with menu and count of votes")
     @GetMapping
     public List<RestaurantTo> getAll() {
-        log.info("getAll");
+        log.info("get all RestaurantTos");
         return voteService.getAllWithVotesByDate(LocalDate.now());
     }
 
     @Operation(
             summary = "Do vote for authenticated user",
             description = "Returns status 204")
-    @PatchMapping("/{restaurantId}")
+    @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void vote(@PathVariable int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Attempt to vote by user id: {}", authUser.id());
-
-        // 11:00 The time of stopping voting today
-        if (LocalTime.now().isAfter(LocalTime.of(11,0))) {
+        if (LocalTime.now().isAfter(votingStopTime)) {
             throw new DataConflictException("Voting Blocked after 11:00");
         }
         User user = authUser.getUser();

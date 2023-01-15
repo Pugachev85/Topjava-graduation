@@ -60,7 +60,6 @@ public class DishController {
             summary = "Get all Dishes for Restaurant",
             description = "Returns all Dishes for Restaurant")
     @GetMapping
-    //TODO: добавить проверку id на существование
     public List<Dish> getAllByRestaurant(@PathVariable int restaurantId) {
         log.info("get all dishes by restaurant id {}", restaurantId);
         return dishRepository.getAllByRestaurant(getExist(restaurantId).id());
