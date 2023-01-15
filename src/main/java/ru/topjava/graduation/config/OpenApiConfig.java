@@ -38,7 +38,8 @@ import org.springframework.context.annotation.Configuration;
                         - user2@yandex.ru / user2<br>
                         - user3@yandex.ru / user3<br>
                         - user4@yandex.ru / user4<br>
-                        - user5@yandex.ru / user5</p>
+                        - user5@yandex.ru / user5<br>
+                        - guest@gmail.com / guest</p>
                         """,
                 contact = @Contact(url = "https://github.com/Pugachev85/Topjava-graduation", name = "Ivan Pugachev", email = "workpost2009@mail.ru")
         ),
