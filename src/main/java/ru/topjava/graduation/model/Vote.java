@@ -10,12 +10,12 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "votes")
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"vote_date", "user_id"}, name = "vote_unique_idx")})
 @Getter
 @Setter
 @NoArgsConstructor
 public class Vote extends BaseEntity {
-    @Column(name = "date", nullable = false)
+    @Column(name = "vote_date", nullable = false)
     @NotNull
     private LocalDate date;
 

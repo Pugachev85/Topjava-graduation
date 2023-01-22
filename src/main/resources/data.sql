@@ -21,10 +21,10 @@ VALUES ('Astoria', 'Russian kitchen.'),
        ('Prival', 'Asia kitchen.'),
        ('Ohotnik', 'European kitchen.');
 
-INSERT INTO VOTES (DATE, RESTAURANT_ID, USER_ID)
+INSERT INTO VOTE (VOTE_DATE, RESTAURANT_ID, USER_ID)
 VALUES (now(), 1, 1);
 
-INSERT INTO DISHES (NAME, DATE, PRICE, RESTAURANT_ID)
+INSERT INTO DISH (NAME, DISH_DATE, PRICE, RESTAURANT_ID)
 VALUES ('Борщ Русский', now(), 100, 1),
        ('Суп Харчо', now(), 120, 1),
        ('Рис отварной', now(), 50, 1),
