@@ -5,20 +5,23 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.graduation.model.Dish;
-import ru.topjava.graduation.model.Restaurant;
 import ru.topjava.graduation.repository.DishRepository;
 import ru.topjava.graduation.repository.RestaurantRepository;
-import ru.topjava.graduation.service.DishService;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
+import static ru.topjava.graduation.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
 
 @Tag(
@@ -29,12 +32,10 @@ import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 public class DishController {
-    static final String REST_URL = "/api/admin/restaurant/{restaurantId}/dishes";
+    private final RestaurantRepository restaurantRepository;
+    static final String REST_URL = "/api/admin/restaurants/{restaurantId}/dishes";
 
     private final DishRepository dishRepository;
-    private final RestaurantRepository restaurantRepository;
-
-    private final DishService dishService;
 
     @Operation(
             summary = "Get Dish with id",
@@ -42,16 +43,17 @@ public class DishController {
     @GetMapping("/{id}")
     public Dish get(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("get Dish {}", id);
-        return dishRepository.checkBelongAndGet(restaurantId, id);
+        return dishRepository.checkBelong(restaurantId, id);
     }
 
+    @Transactional
     @Operation(
             summary = "Delete Dish with id",
             description = "Returns status 204")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {
-        int checkedId = dishRepository.checkBelongAndGet(getExist(restaurantId).id(), id).id();
+        int checkedId = dishRepository.checkBelong(restaurantId, id).id();
         log.info("delete {}", checkedId);
         dishRepository.delete(checkedId);
     }
@@ -62,9 +64,20 @@ public class DishController {
     @GetMapping
     public List<Dish> getAllByRestaurant(@PathVariable int restaurantId) {
         log.info("get all dishes by restaurant id {}", restaurantId);
-        return dishRepository.getAllByRestaurant(getExist(restaurantId).id());
+        return dishRepository.getAllByRestaurant(restaurantId);
     }
 
+    @Operation(
+            summary = "Get all Dishes for Restaurant on date",
+            description = "Returns all Dishes for Restaurant on date")
+    @GetMapping("/filter")
+    public List<Dish> getAllByRestaurantAndDate(@PathVariable int restaurantId,
+                                                @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("get all dishes by restaurant id {}", restaurantId);
+        return dishRepository.getAllByRestaurantAndDate(restaurantId, date);
+    }
+
+    @Transactional
     @Operation(
             summary = "Update Dish with id",
             description = "Returns status 204")
@@ -72,10 +85,12 @@ public class DishController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int id) {
         log.info("update dish {}", dish);
-        dish.setId(id);
-        dishService.save(dish, getExist(restaurantId).id());
+        assureIdConsistent(dish, id);
+        dishRepository.checkBelong(restaurantId, id);
+        dishRepository.save(dish);
     }
 
+    @Transactional
     @Operation(
             summary = "Create new Dish for Restaurant",
             description = "Returns Dish with location")
@@ -83,14 +98,10 @@ public class DishController {
     public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restaurantId) {
         log.info("create dish {}", dish);
         checkNew(dish);
-        Dish created = dishService.save(dish, getExist(restaurantId).id());
+        dish.setRestaurant(restaurantRepository.get(restaurantId));
+        Dish created = dishRepository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{}")
-                .buildAndExpand(created.getId()).toUri();
+                .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
-    }
-
-    private Restaurant getExist(int restaurantId){
-        return restaurantRepository.getExisted(restaurantId);
     }
 }
