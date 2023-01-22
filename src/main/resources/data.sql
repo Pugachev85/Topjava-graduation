@@ -15,10 +15,10 @@ VALUES ('USER', 1),
        ('USER', 4),
        ('USER', 5),
        ('USER', 6);
-INSERT INTO RESTAURANT (NAME, UPDATE_DATE)
-VALUES ('Astoria', now()),
-       ('Prival', now()),
-       ('Ohotnik', now());
+INSERT INTO RESTAURANT (NAME, DESCRIPTION)
+VALUES ('Astoria', 'Russian kitchen.'),
+       ('Prival', 'Asia kitchen.'),
+       ('Ohotnik', 'European kitchen.');
 INSERT INTO VOTES (DATE, RESTAURANT_ID, USER_ID)
 VALUES (now(), 1, 1);
 

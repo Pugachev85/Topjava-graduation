@@ -18,12 +18,8 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
 
-    public List<RestaurantTo> getAllWithVotesByDate(LocalDate now) {
-        return restaurantRepository.getAllWithDishesByDate(now).stream()
-                .map(RestaurantTo::new)
-                .peek(restaurantTo -> restaurantTo.setCountOfVotes(
-                        voteRepository.getCountByRestaurantAndDate(restaurantTo.getId(), now)))
-                .toList();
+    public List<RestaurantTo> getAllWithVotesByDate(LocalDate date) {
+        return null;
     }
 
     public Restaurant getExisted(int restaurantId) {

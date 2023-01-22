@@ -16,6 +16,9 @@ import org.hibernate.validator.constraints.Range;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dish extends NamedEntity {
 
+    //    @Column(name = "update_date", nullable = false)
+//    @NotNull
+//    private LocalDate updateDate;
     @Range(min = 1, max = 10000)
     @NotNull
     @Column(name = "price", nullable = false)

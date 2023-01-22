@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.topjava.graduation.util.validation.NoHtml;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,12 +21,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@ToString(callSuper = true, exclude = {"user"})
 public class Restaurant extends NamedEntity {
 
-    @Column(name = "update_date", nullable = false)
-    @NotNull
-    private LocalDate updateDate;
+    @NotBlank
+    @Size(min = 2, max = 128)
+    @Column(name = "description", nullable = false)
+    @NoHtml
+    protected String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @Schema(hidden = true)
@@ -34,19 +36,13 @@ public class Restaurant extends NamedEntity {
 
     @JsonManagedReference(value = "restaurant_votes")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @Schema(hidden = true)
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Vote> votes;
 
-    public Restaurant(Integer id, String name, LocalDate updateDate) {
+    public Restaurant(Integer id, String name, String description, List<Dish> dishes) {
         super(id, name);
-        this.updateDate = updateDate;
-    }
-
-    public Restaurant(Integer id, String name, LocalDate updateDate, List<Dish> dishes) {
-        super(id, name);
-        this.updateDate = updateDate;
+        this.description = description;
         this.dishes = dishes;
     }
 }

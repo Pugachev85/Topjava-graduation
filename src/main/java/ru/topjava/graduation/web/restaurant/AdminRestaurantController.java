@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.graduation.model.Restaurant;
 import ru.topjava.graduation.repository.RestaurantRepository;
+import ru.topjava.graduation.to.RestaurantTo;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
+import static ru.topjava.graduation.util.RestaurantUtil.convertToTo;
 import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
 
 @Tag(
@@ -27,7 +28,7 @@ import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 public class AdminRestaurantController {
-    static final String REST_URL = "/api/admin/restaurant";
+    static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantRepository restaurantRepository;
 
@@ -35,9 +36,18 @@ public class AdminRestaurantController {
             summary = "Get Restaurant by id",
             description = "Returns Restaurant")
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> getWithDishes(@PathVariable int id) {
+    public RestaurantTo get(@PathVariable int id) {
         log.info("get restaurant {}", id);
-        return ResponseEntity.of(restaurantRepository.getWithDishes(id));
+        return convertToTo(restaurantRepository.getExisted(id));
+    }
+
+    @Operation(
+            summary = "Get Restaurant by id",
+            description = "Returns Restaurant with dishes")
+    @GetMapping("/{id}/with-dishes")
+    public Restaurant getWithDishes(@PathVariable int id) {
+        log.info("get restaurant {}", id);
+        return restaurantRepository.getExistedWithDishes(id);
     }
 
     @Operation(
@@ -55,9 +65,9 @@ public class AdminRestaurantController {
             summary = "Get all Restaurants",
             description = "Returns all Restaurants")
     @GetMapping
-    public List<Restaurant> getAll() {
+    public List<RestaurantTo> getAll() {
         log.info("getAll");
-        return restaurantRepository.getAll();
+        return convertToTo(restaurantRepository.getAll());
     }
 
     @Operation(
@@ -68,7 +78,6 @@ public class AdminRestaurantController {
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update restaurant {}", restaurant);
         restaurant.setId(id);
-        restaurant.setUpdateDate(LocalDate.now());
         restaurantRepository.save(restaurant);
     }
 

@@ -4,7 +4,6 @@ import ru.topjava.graduation.model.Restaurant;
 import ru.topjava.graduation.to.RestaurantTo;
 import ru.topjava.graduation.web.MatcherFactory;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static ru.topjava.graduation.web.dish.DishTestData.*;
@@ -16,23 +15,20 @@ public class RestaurantTestData {
     public static final int RESTAURANT1_ID = 1;
     public static final String NOTFOUND_ID = "100";
 
-    public static final Restaurant RESTAURANT_1 = new Restaurant(RESTAURANT1_ID, "Astoria", LocalDate.now());
-    public static final Restaurant RESTAURANT_2 = new Restaurant(RESTAURANT1_ID + 1, "Prival", LocalDate.now());
-    public static final Restaurant RESTAURANT_3 = new Restaurant(RESTAURANT1_ID + 2, "Ohotnik", LocalDate.now());
+    public static final Restaurant RESTAURANT_1 = new Restaurant(RESTAURANT1_ID, "Astoria", "Russian kitchen.", DISHES);
+    public static final Restaurant RESTAURANT_2 = new Restaurant(RESTAURANT1_ID + 1, "Prival", "Asia kitchen.", DISHES2);
 
-    public static final RestaurantTo RESTAURANT_TO_1 = new RestaurantTo(RESTAURANT1_ID, "Astoria", 1, DISHES);
-    public static final RestaurantTo RESTAURANT_TO_2 = new RestaurantTo(RESTAURANT1_ID + 1, "Prival", 0, DISHES2);
-    public static final RestaurantTo RESTAURANT_TO_3 = new RestaurantTo(RESTAURANT1_ID + 2, "Ohotnik", 0, DISHES3);
+    public static final RestaurantTo RESTAURANT_TO_1 = new RestaurantTo(RESTAURANT1_ID, "Astoria", "Russian kitchen.");
+    public static final RestaurantTo RESTAURANT_TO_2 = new RestaurantTo(RESTAURANT1_ID + 1, "Prival", "Asia kitchen.");
+    public static final RestaurantTo RESTAURANT_TO_3 = new RestaurantTo(RESTAURANT1_ID + 2, "Ohotnik", "European kitchen.");
 
-    public static final Restaurant RESTAURANT1_WITH_DISHES = new Restaurant(RESTAURANT1_ID, "Astoria", LocalDate.now(), DISHES);
-
-    public static final List<Restaurant> RESTAURANTS = List.of(RESTAURANT_1, RESTAURANT_2, RESTAURANT_3);
+    public static final List<RestaurantTo> RESTAURANTS_TO = List.of(RESTAURANT_TO_1, RESTAURANT_TO_2, RESTAURANT_TO_3);
 
     public static Restaurant getNew() {
-        return new Restaurant(null, "Новый ресторан", LocalDate.now());
+        return new Restaurant(null, "Новый ресторан", "description", null);
     }
 
     public static Restaurant getUpdated() {
-        return new Restaurant(RESTAURANT1_ID, "Updated", LocalDate.now());
+        return new Restaurant(RESTAURANT1_ID, "Updated", "description", null);
     }
 }
