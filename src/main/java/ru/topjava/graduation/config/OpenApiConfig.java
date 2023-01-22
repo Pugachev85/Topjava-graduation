@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
                         If it is before 11:00 we assume that he changed his mind.<br>
                         If it is after 11:00 then it is too late, vote can't be changed<br>
                         Each restaurant provides a new menu each day.</p><br>
-                        <p><b>Тестовые данные user / password:</b><br>
+                        <p><b>Test data: user / password:</b><br>
                         - user@yandex.ru / user<br>
                         - admin@gmail.com / admin<br>
                         - user2@yandex.ru / user2<br>

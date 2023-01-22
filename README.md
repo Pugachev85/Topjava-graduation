@@ -1,4 +1,4 @@
-Ivan Pugachev graduation project
+Restaurant voting system REST API
 ==========================================================
 __________________________________________________________
 

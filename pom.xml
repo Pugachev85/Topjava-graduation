@@ -8,7 +8,7 @@
         <version>3.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>ru.topjava</groupId>
+    <groupId>com.github.Pugachev85</groupId>
     <artifactId>graduation</artifactId>
     <version>1.0</version>
     <name>Restaurant vote</name>
