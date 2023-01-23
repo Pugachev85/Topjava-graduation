@@ -1,7 +1,9 @@
 package ru.topjava.graduation.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,20 +21,22 @@ public class Vote extends BaseEntity {
     @NotNull
     private LocalDate date;
 
-    @JsonBackReference(value = "restaurant_votes")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
+    @Column(name = "restaurant_id", nullable = false)
+    private Integer restaurantId;
 
-    @JsonBackReference(value = "user_votes")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    public Vote(Integer id, LocalDate date, Restaurant restaurant, User user) {
+    public Vote(Integer id, LocalDate date, Integer restaurantId, Integer userId) {
         super(id);
         this.date = date;
-        this.restaurant = restaurant;
-        this.user = user;
+        this.restaurantId = restaurantId;
+        this.userId = userId;
+    }
+
+    public Vote(LocalDate date, Integer restaurantId, Integer userId) {
+        this.date = date;
+        this.restaurantId = restaurantId;
+        this.userId = userId;
     }
 }

@@ -1,10 +1,9 @@
 package ru.topjava.graduation.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +11,12 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "dish_date", "restaurant_id"}, name = "dish_unique_idx")})
+@Table(name = "dish", uniqueConstraints = {
+        @UniqueConstraint(name = "dish_unique_idx", columnNames = {"name", "dish_date", "restaurant_id"})
+})
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Dish extends NamedEntity {
 
     @Column(name = "dish_date", nullable = false)
@@ -29,12 +30,19 @@ public class Dish extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    @Schema(hidden = true)
+    @JsonIgnore
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, LocalDate date, Double price) {
         super(id, name);
         this.date = date;
         this.price = price;
+    }
+
+    public Dish(Integer id, String name, LocalDate date, double price, Restaurant restaurant) {
+        super(id, name);
+        this.date = date;
+        this.price = price;
+        this.restaurant = restaurant;
     }
 }

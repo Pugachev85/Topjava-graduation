@@ -87,6 +87,7 @@ public class DishController {
         log.info("update dish {}", dish);
         assureIdConsistent(dish, id);
         dishRepository.checkBelong(restaurantId, id);
+        dish.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
         dishRepository.save(dish);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.topjava.graduation.error.IllegalRequestDataException;
 import ru.topjava.graduation.model.Restaurant;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,8 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
         return getWithDishes(id).orElseThrow(
                 () -> new IllegalRequestDataException("Restaurant id=" + id + " not found"));
     }
+    @Query("SELECT r FROM Restaurant r JOIN FETCH r.dishes  d WHERE r.id=:id AND d.date = :date")
+    Restaurant getWithDishesOnDate(int id, LocalDate date);
+    @Query("SELECT r FROM Restaurant r JOIN r.dishes  d WHERE d.date  = :date ORDER BY r.id ASC")
+    List<Restaurant> getRestaurantsOnDate(LocalDate date);
 }

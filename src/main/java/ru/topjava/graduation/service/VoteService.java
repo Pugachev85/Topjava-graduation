@@ -2,35 +2,22 @@ package ru.topjava.graduation.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.topjava.graduation.model.Restaurant;
-import ru.topjava.graduation.model.User;
+import ru.topjava.graduation.error.DataConflictException;
 import ru.topjava.graduation.model.Vote;
-import ru.topjava.graduation.repository.RestaurantRepository;
 import ru.topjava.graduation.repository.VoteRepository;
-import ru.topjava.graduation.to.RestaurantTo;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalTime;
 
 @Service
 @AllArgsConstructor
 public class VoteService {
+    public static LocalTime votingStopTime = LocalTime.of(11, 0);// 11:00 The time of stopping voting today
     private final VoteRepository voteRepository;
-    private final RestaurantRepository restaurantRepository;
 
-    public List<RestaurantTo> getAllWithVotesByDate(LocalDate date) {
-        return null;
-    }
-
-    public Restaurant getExisted(int restaurantId) {
-        return restaurantRepository.getExisted(restaurantId);
-    }
-
-    public Vote findByUserAndDate(User user, LocalDate now) {
-        return voteRepository.findByUserAndDate(user, now);
-    }
-
-    public void save(Vote vote) {
+    public void update(Vote vote) {
+        if (LocalTime.now().isAfter(votingStopTime)) {
+            throw new DataConflictException("You can`t change your vote after 11:00");
+        }
         voteRepository.save(vote);
     }
 }

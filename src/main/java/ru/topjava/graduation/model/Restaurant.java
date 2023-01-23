@@ -1,7 +1,5 @@
 package ru.topjava.graduation.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -33,12 +31,6 @@ public class Restaurant extends NamedEntity {
     @Schema(hidden = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
-
-    @JsonManagedReference(value = "restaurant_votes")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @JsonIgnore
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Vote> votes;
 
     public Restaurant(Integer id, String name, String description, List<Dish> dishes) {
         super(id, name);

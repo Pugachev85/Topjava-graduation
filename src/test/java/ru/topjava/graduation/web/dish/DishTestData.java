@@ -20,6 +20,7 @@ public class DishTestData {
     public static final Dish DISH_5 = new Dish(DISH1_ID + 4, "Гуляш говяжий", LocalDate.now(), 200.0);
     public static final Dish DISH_6 = new Dish(DISH1_ID + 5, "Хлеб", LocalDate.now(), 15.0);
     public static final Dish DISH_7 = new Dish(DISH1_ID + 6, "Чай с лимоном", LocalDate.now(), 60.0);
+    public static final Dish DISH_20 = new Dish(DISH1_ID + 19, "Макароны \"по флотски\"", LocalDate.of(2023, 1, 22), 130.0);
 
     public static final Dish DISH_8 = new Dish(DISH1_ID + 7, "Суп гороховый", LocalDate.now(), 100.0);
     public static final Dish DISH_9 = new Dish(DISH1_ID + 8, "Рис отварной", LocalDate.now(), 50.0);
@@ -35,7 +36,7 @@ public class DishTestData {
     public static final Dish DISH_18 = new Dish(DISH1_ID + 17, "Хлеб", LocalDate.now(), 15.0);
     public static final Dish DISH_19 = new Dish(DISH1_ID + 18, "Компот", LocalDate.now(), 60.0);
 
-    public static final List<Dish> DISHES = List.of(DISH_1, DISH_2, DISH_3, DISH_4, DISH_5, DISH_6, DISH_7);
+    public static final List<Dish> DISHES = List.of(DISH_1, DISH_2, DISH_3, DISH_4, DISH_5, DISH_6, DISH_7, DISH_20);
     public static final List<Dish> DISHES2 = List.of(DISH_8, DISH_9, DISH_10, DISH_11, DISH_12, DISH_13);
     public static final List<Dish> DISHES3 = List.of(DISH_14, DISH_15, DISH_16, DISH_17, DISH_18, DISH_19);
 
@@ -44,8 +45,6 @@ public class DishTestData {
     }
 
     public static Dish getUpdated() {
-        Dish updated = new Dish(DISH1_ID, "Новый борщ", LocalDate.now(), 120.0);
-        updated.setRestaurant(RESTAURANT_1);
-        return updated;
+        return new Dish(DISH1_ID, "Новый борщ", LocalDate.now(), 120.0, RESTAURANT_1);
     }
 }
