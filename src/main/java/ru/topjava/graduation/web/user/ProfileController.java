@@ -5,15 +5,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.topjava.graduation.model.User;
 import ru.topjava.graduation.to.UserTo;
 import ru.topjava.graduation.util.UsersUtil;
 import ru.topjava.graduation.web.AuthUser;
 
+import java.net.URI;
+
 import static ru.topjava.graduation.util.validation.ValidationUtil.assureIdConsistent;
+import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
 
 @Tag(
         name = "User Profile Controller",
@@ -23,6 +28,19 @@ import static ru.topjava.graduation.util.validation.ValidationUtil.assureIdConsi
 public class ProfileController extends AbstractUserController {
     static final String REST_URL = "/api/profile";
 
+    @Operation(
+            summary = "Register new User",
+            description = "Returns status 201")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
+        log.info("register {}", userTo);
+        checkNew(userTo);
+        User created = prepareAndSave(UsersUtil.createNewFromTo(userTo));
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL).build().toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
+    }
     @Operation(
             summary = "Get authenticated User profile",
             description = "Returns User")

@@ -38,7 +38,7 @@ public class DishController {
     private final DishRepository dishRepository;
 
     @Operation(
-            summary = "Get Dish with id",
+            summary = "Get Dish by id",
             description = "Returns Dish")
     @GetMapping("/{id}")
     public Dish get(@PathVariable int restaurantId, @PathVariable int id) {
@@ -48,7 +48,7 @@ public class DishController {
 
     @Transactional
     @Operation(
-            summary = "Delete Dish with id",
+            summary = "Delete Dish by id",
             description = "Returns status 204")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -79,7 +79,7 @@ public class DishController {
 
     @Transactional
     @Operation(
-            summary = "Update Dish with id",
+            summary = "Update Dish by id",
             description = "Returns status 204")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -102,7 +102,7 @@ public class DishController {
         dish.setRestaurant(restaurantRepository.get(restaurantId));
         Dish created = dishRepository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL).build().toUri();
+                .path(REST_URL.replace("{restaurantId}", String.valueOf(restaurantId))).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 }

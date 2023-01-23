@@ -1,15 +1,12 @@
 package ru.topjava.graduation.to;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import ru.topjava.graduation.HasId;
+import lombok.Value;
 import ru.topjava.graduation.model.Restaurant;
 
-@Getter
-@Setter
+@Value
 @EqualsAndHashCode(callSuper = true)
-public class RestaurantTo extends NamedTo implements HasId {
+public class RestaurantTo extends NamedTo {
 
     String description;
 

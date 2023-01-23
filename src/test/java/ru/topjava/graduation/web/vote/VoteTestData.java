@@ -9,7 +9,7 @@ import static ru.topjava.graduation.web.restaurant.RestaurantTestData.RESTAURANT
 import static ru.topjava.graduation.web.user.UserTestData.USER_ID;
 
 public class VoteTestData {
-    public static MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingEqualsComparator(Vote.class);
+    public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingEqualsComparator(Vote.class);
 
     public static final int VOTE_ID = 1;
     public static final Vote VOTE_1 = new Vote(VOTE_ID, LocalDate.now(), RESTAURANT1_ID, USER_ID);

@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 import static ru.topjava.graduation.util.RestaurantUtil.convertToTo;
+import static ru.topjava.graduation.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.topjava.graduation.util.validation.ValidationUtil.checkNew;
 
 @Tag(
@@ -57,8 +58,7 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        Restaurant checked = restaurantRepository.getExisted(id);
-        restaurantRepository.delete(checked.id());
+        restaurantRepository.deleteExisted(id);
     }
 
     @Operation(
@@ -77,7 +77,7 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update restaurant {}", restaurant);
-        restaurant.setId(id);
+        assureIdConsistent(restaurant, id);
         restaurantRepository.save(restaurant);
     }
 
